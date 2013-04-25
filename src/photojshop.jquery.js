@@ -89,12 +89,12 @@
 				// Create new context
 				ctx.drawImage(this, 0, 0);	// Draw image into canvas
 				imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
-				if(!generated){
+				/*if(!generated){
 					generateAvg(function(){
 						applyEffect();
 					});
 					return;
-				}
+				}*/
 				applyEffect();
 				return;
 			});
@@ -117,6 +117,7 @@
 		 * image size / resolution it is almost undetectable.
 		 */
 		function generateAvg(callback){
+			console.log("Generating average");
 			avg = []; // clear current avg
 			
 			// Get samples from the image with the resolution set in strokeResolution
@@ -166,8 +167,7 @@
 				dest = pix,
 				total = pix.length,
 				mat = effects[settings.effect],
-				matWidth = canvas.width*4,
-				row, col, center, up, down, index, sum, pixel;
+				row, col, center, up, down, index, sum, channel;
 			
 			// Loop through rows and columns of image/canvas
 			for (row = 1; row < canvas.width - 1; row++) {
@@ -176,21 +176,21 @@
 				center = (row * canvas.width)*4 + 4;
 		
 				// Pixels above and below
-				up = center - matWidth;
-				down = center + matWidth
+				up = center - canvas.width*4;
+				down = center + canvas.width*4
 		
 				// Loop through columns
 				for (col = 1; col < canvas.height - 1; col++) {
 		
 					// channel on dest/src image
-					for (pixel = 0; pixel < 3; pixel++) {
+					for (channel = 0; channel < 3; channel++) {
 						// Current pixel in position
 						sum = 0;
 		
 						// NW (northwest)
 						// -4 because each pixel is 4 elements in the array,
 						// and -4 goes left one pixel:
-						index = (up - 4) + pixel;
+						index = (up - 4) + channel;
 						sum += pix[index] * mat[0][0];
 		
 						// N
@@ -202,7 +202,7 @@
 						sum += pix[index] * mat[0][2];
 		
 						// W
-						index = (center - 4) + pixel;
+						index = (center - 4) + channel;
 						sum += pix[index] * mat[1][0];
 		
 						// Center
@@ -214,7 +214,7 @@
 						sum += pix[index] * mat[1][2];
 		
 						// SW
-						index = (down - 4) + pixel;
+						index = (down - 4) + channel;
 						sum += pix[index] * mat[2][0];
 		
 						// S
@@ -230,7 +230,7 @@
 						sum = Math.min(Math.max(sum, 0), 255);
 		
 						// and store in the dest pixels
-						dest[center+pixel] = sum;
+						dest[center+channel] = sum;
 					}
 		
 					// set alpha on this pixel to fully opaque:
