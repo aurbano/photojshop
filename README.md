@@ -8,6 +8,14 @@ Right now I am working on a jQuery plugin version, still **under development** *
 
 The idea is to provide a simple library to developers that will allow quick integration of photo filters to their website.
 
+##Demo
+If you clone the repo, simply open `index.html`, which is a very simple demo of the plugin's capabilities.
+The project has Github's pages enabled, so you can see the demo page online:
+
+* [PhotoJShop demo](http://github.urbanoalvarez.es/PhotoJShop/) *(Development)*
+
+*Please note that it sometimes takes Github several hours to update the files shown in GH Pages*
+
 ##Usage
 After including jQuery, include *photojshop.jquery.js*. Once loaded you simply need to call it on a valid element.
 Right now it works on Canvas and images, so you would call it like so:
