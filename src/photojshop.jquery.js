@@ -58,21 +58,6 @@
 					[ 0.000, 9.000, 0.000 ],
 					[ 9.000, -36.0, 9.000 ],
 					[ 0.000, 9.000, 0.000 ]
-				],
-				"identity": [
-					[ 0.000, 0.000, 0.000 ],
-					[ 0.000, 9.000, 0.000 ],
-					[ 0.000, 0.000, 0.000 ]
-				],
-				"mikesfav": [
-					[ 2.000, 22.00, 1.000 ],
-					[ 22.00, 1.000, -22.0 ],
-					[ 1.000, -22.0, -2.00 ]
-				],
-				"custom": [
-					[ 0.000, 0.000, 0.000 ],
-					[ 0.000, 9.000, 0.000 ],
-					[ 0.000, 0.000, 0.000 ]
 				]		
 			};
 		// Check if we are operating on an image or in a canvas
@@ -83,24 +68,23 @@
 			// Resize canvas to fit img
 			canvas.width = this.width();
 			canvas.height = this.height();
-			$('body').append(canvas);
+			// Following line should be removed, its here only during development
+			$('article').append(canvas);
 			// Wait until photo has loaded
-			this.load(function(){
-				// Create new context
-				ctx.drawImage(this, 0, 0);	// Draw image into canvas
-				imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
-				/*if(!generated){
-					generateAvg(function(){
-						applyEffect();
-					});
-					return;
-				}*/
-				applyEffect();
+			// Create new context
+			ctx.drawImage(this.get(0), 0, 0);	// Draw image into canvas
+			imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			/*if(!generated){
+				generateAvg(function(){
+					applyEffect();
+				});
 				return;
-			});
+			}*/
+			applyEffect();
 			return;
 		}else if(!this.is('canvas')){
 			alert('Unsupported element')
+			return;
 		}
 		ctx = canvas.getContext('2d');
 		imgd = ctx.getImageData(0, 0, this.width(), this.height());
@@ -158,6 +142,7 @@
 		 * Applies a given effect to the canvas
 		 */
 		function applyEffect(callback){
+			console.log("Applying effect: "+settings.effect);
 			if(settings.effect == null){
 				console.error("PhotoJShop error: You must select an effect");
 				return false;

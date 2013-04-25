@@ -4,8 +4,47 @@
 <meta charset="utf-8">
 <title>PhotoJShop</title>
 <style type="text/css">
+body{
+	text-align:center;
+	background:#F7F7F7;
+	font-family:Georgia, "Times New Roman", Times, serif;
+}
 canvas{
 	border:#666 solid 1px;
+}
+h1{
+	color:#003871;
+}
+a{
+	text-decoration:none;
+	color:#005BCC;
+}
+a:hover{
+	color:#C00;
+}
+nav{
+	border:solid 1px #DDD;
+	display:inline-block;
+	margin-bottom:20px;
+}
+nav ul{
+	padding:0;
+	margin:0;
+	list-style:none;
+}
+nav li{ display:inline-block; }
+nav a{
+	display:inline-block;
+	padding:5px 15px;
+}
+nav a:hover{
+	background:#efefef;
+}
+footer{
+	text-align:center;
+	margin:30px 0;
+	font-size:80%;
+	color:#555;
 }
 </style>
 <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>-->
@@ -13,13 +52,37 @@ canvas{
 <script src="src/photojshop.jquery.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#jack').PhotoJShop("darken");
+	$('nav a').click(function(e){
+		e.preventDefault();
+		$('#jack').PhotoJShop({
+			'effect' : $(this).attr("data-effect")
+		});
+		return true;
+	});
 });
 </script>
 </head>
 
 <body>
 <h1>PhotoJShop Demo</h1>
-<img src="demo/img/jack.jpg" id="jack" width="590" height="725" alt="Jack">
+<div style="width:500px; margin:0 auto;">
+<p>Welcome to the PhotoJShop demo page. Below you will find a set of links that will apply the corresponding effect to the image.</p>
+<p>For more information and bug reporting please go to the <a href="https://github.com/aurbano/PhotoJShop">Github repository</a>.</p></div>
+<nav>
+	<ul>
+		<li><a href="#blur" data-effect="blur">Blur</a></li>
+		<li><a href="#sharpen" data-effect="sharpen">Sharpen</a></li>
+		<li><a href="#lighten" data-effect="lighten">Lighten</a></li>
+		<li><a href="#darken" data-effect="darken">Darken</a></li>
+		<li><a href="#emboss" data-effect="emboss">Emboss</a></li>
+		<li><a href="#edge" data-effect="edge">Edge</a></li>
+	</ul>
+</nav>
+<article>
+	<img src="demo/img/jack.jpg" id="jack" width="590" height="725" alt="Jack" />
+</article>
+<footer>
+	<small><a href="https://github.com/aurbano/PhotoJShop">Fork on Github</a> &bull; Developed by <a href="http://urbanoalvarez.es">Alejandro U. Álvarez</a></small>
+</footer>
 </body>
 </html>
