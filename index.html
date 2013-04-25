@@ -3,12 +3,17 @@
 <head>
 <meta charset="utf-8">
 <title>PhotoJShop</title>
+<style type="text/css">
+canvas{
+	border:#666 solid 1px;
+}
+</style>
 <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>-->
 <script src="js/jquery.js"></script>
 <script src="src/photojshop.jquery.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#jack').PhotoJShop({});
+	$('#jack').PhotoJShop("darken");
 });
 </script>
 </head>
