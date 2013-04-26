@@ -22,13 +22,24 @@
 		if(typeof options == "string"){
 			settings.effect = options;
 		}
-		// Store reference to canvas
-		var canvas = this,	// Canvas element
-			ctx = null,		// Context
-			imgd = null,	// Image data
-			avg = [],		// Average data
-			generated = false,
+		// Internal variables
+		var srcCanvas = this,
+			destCanvas = document.createElement('canvas'),
+			srcCtx = null,
+			destCtx = destCanvas.getContext('2d'),
+			imgd = null,
 			effects = {
+				"darken" : [
+					[ 0.000, 0.000, 0.000 ],
+					[ 0.000, 6.000, 0.000 ],
+					[ 0.000, 0.000, 0.000 ]
+				]
+			};
+			
+		destCanvas.width = this.width(),
+		destCanvas.height = this.height();
+		// Store reference to canvas
+		/*effects = {
 				"blur": [
 					[ 1.000, 1.000, 1.000 ],
 					[ 1.000, 1.000, 1.000 ],
@@ -59,21 +70,21 @@
 					[ 9.000, -36.0, 9.000 ],
 					[ 0.000, 9.000, 0.000 ]
 				]		
-			};
+			};*/
 		// Check if we are operating on an image or in a canvas
 		if(this.is('img')){
 			// Create a canvas element
-			canvas = document.createElement('canvas');
-			ctx = canvas.getContext('2d');
+			srcCanvas = document.createElement('canvas');
+			srcCtx = srcCanvas.getContext('2d');
 			// Resize canvas to fit img
-			canvas.width = this.width();
-			canvas.height = this.height();
-			// Following line should be removed, its here only during development
-			$('article').append(canvas);
-			// Wait until photo has loaded
+			srcCanvas.width = this.width();
+			srcCanvas.height = this.height();
+			// Draw both (Only for development)
+			$('article').append(srcCanvas);
+			$('article').append(destCanvas);
 			// Create new context
-			ctx.drawImage(this.get(0), 0, 0);	// Draw image into canvas
-			imgd = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			srcCtx.drawImage(this.get(0), 0, 0);	// Draw image into canvas
+			imgd = srcCtx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
 			/*if(!generated){
 				generateAvg(function(){
 					applyEffect();
@@ -86,8 +97,8 @@
 			alert('Unsupported element')
 			return;
 		}
-		ctx = canvas.getContext('2d');
-		imgd = ctx.getImageData(0, 0, this.width(), this.height());
+		srcCtx = srcCanvas.getContext('2d');
+		imgd = srcCtx.getImageData(0, 0, this.width(), this.height());
 		
 		// --------- IMAGE FUNCTIONS ----------- //
 		
@@ -155,17 +166,18 @@
 				row, col, center, up, down, index, sum, channel;
 			
 			// Loop through rows and columns of image/canvas
-			for (row = 1; row < canvas.width - 1; row++) {
+			for (row = 1; row < srcCanvas.width - 1; row++) {
 		
 				// Current pixel
-				center = (row * canvas.width)*4 + 4;
+				//center = (row * canvas.width)*4 + 4;
+				center = (row*srcCanvas.width)*4+4;
 		
 				// Pixels above and below
-				up = center - canvas.width*4;
-				down = center + canvas.width*4
+				up = center - srcCanvas.width*4;
+				down = center + srcCanvas.width*4;
 		
 				// Loop through columns
-				for (col = 1; col < canvas.height - 1; col++) {
+				for (col = 1; col < srcCanvas.height - 1; col++) {
 		
 					// channel on dest/src image
 					for (channel = 0; channel < 3; channel++) {
@@ -229,13 +241,15 @@
 				} // for cols
 			} // for rows
 			imgd.data = dest;
-			ctx.putImageData(imgd, 0, 0);
+			destCtx.putImageData(imgd, 0, 0);
+			// Now save and display
+			//$('article').append('<img src="'+save()+'">');
 		}
 		/**
 		 * Generates a data URL for the canvas
 		 */
 		function save(){
-			return this.canvas.elem.get(0).toDataURL();
+			return destCanvas.toDataURL();
 		}
 	};
 })(jQuery, window, document);
