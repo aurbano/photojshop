@@ -27,19 +27,9 @@
 			destCanvas = document.createElement('canvas'),
 			srcCtx = null,
 			destCtx = destCanvas.getContext('2d'),
-			imgd = null,
+			srcImgd = null,
+			destImgd = null,
 			effects = {
-				"darken" : [
-					[ 0.000, 0.000, 0.000 ],
-					[ 0.000, 6.000, 0.000 ],
-					[ 0.000, 0.000, 0.000 ]
-				]
-			};
-			
-		destCanvas.width = this.width(),
-		destCanvas.height = this.height();
-		// Store reference to canvas
-		/*effects = {
 				"blur": [
 					[ 1.000, 1.000, 1.000 ],
 					[ 1.000, 1.000, 1.000 ],
@@ -69,8 +59,18 @@
 					[ 0.000, 9.000, 0.000 ],
 					[ 9.000, -36.0, 9.000 ],
 					[ 0.000, 9.000, 0.000 ]
-				]		
-			};*/
+				]
+			};
+			
+		destCanvas.width = this.width(),
+		destCanvas.height = this.height();
+		// Fill with empty pixels
+		destCtx.beginPath();
+		destCtx.rect(0, 0, destCanvas.width, destCanvas.height);
+		destCtx.fillStyle = "rgba(0,0,0,0)";
+		destCtx.fill();
+		destImgd = destCtx.getImageData(0, 0, destCanvas.width, destCanvas.height);
+		
 		// Check if we are operating on an image or in a canvas
 		if(this.is('img')){
 			// Create a canvas element
@@ -80,11 +80,11 @@
 			srcCanvas.width = this.width();
 			srcCanvas.height = this.height();
 			// Draw both (Only for development)
-			$('article').append(srcCanvas);
+			//$('article').append(srcCanvas);
 			$('article').append(destCanvas);
 			// Create new context
 			srcCtx.drawImage(this.get(0), 0, 0);	// Draw image into canvas
-			imgd = srcCtx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
+			srcImgd = srcCtx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
 			/*if(!generated){
 				generateAvg(function(){
 					applyEffect();
@@ -98,7 +98,7 @@
 			return;
 		}
 		srcCtx = srcCanvas.getContext('2d');
-		imgd = srcCtx.getImageData(0, 0, this.width(), this.height());
+		srcImgd = srcCtx.getImageData(0, 0, this.width(), this.height());
 		
 		// --------- IMAGE FUNCTIONS ----------- //
 		
@@ -116,7 +116,7 @@
 			avg = []; // clear current avg
 			
 			// Get samples from the image with the resolution set in strokeResolution
-			var pix = imgd, auxAvg, points;
+			var pix = srcImgd, auxAvg, points;
 			//
 			for(var y = 0; y < pix.height; y += settings.resolution){
 				for(var x = 0; x < pix.width; x += settings.resolution){
@@ -158,90 +158,74 @@
 				console.error("PhotoJShop error: You must select an effect");
 				return false;
 			}
-			// Required variables
-			var pix = imgd.data,
-				dest = pix,
-				total = pix.length,
+			// Local variables
+			var src = srcImgd,
+				dest = destImgd,
+				total = src.data.length,
 				mat = effects[settings.effect],
-				row, col, center, up, down, index, sum, channel;
-			
-			// Loop through rows and columns of image/canvas
-			for (row = 1; row < srcCanvas.width - 1; row++) {
-		
-				// Current pixel
-				//center = (row * canvas.width)*4 + 4;
-				center = (row*srcCanvas.width)*4+4;
-		
-				// Pixels above and below
-				up = center - srcCanvas.width*4;
-				down = center + srcCanvas.width*4;
-		
-				// Loop through columns
-				for (col = 1; col < srcCanvas.height - 1; col++) {
-		
-					// channel on dest/src image
-					for (channel = 0; channel < 3; channel++) {
-						// Current pixel in position
-						sum = 0;
-		
-						// NW (northwest)
-						// -4 because each pixel is 4 elements in the array,
-						// and -4 goes left one pixel:
-						index = (up - 4) + channel;
-						sum += pix[index] * mat[0][0];
-		
-						// N
-						index += 4; // next pixel
-						sum += pix[index] * mat[0][1];
-		
-						// NE
-						index += 4; // next pixel
-						sum += pix[index] * mat[0][2];
-		
-						// W
-						index = (center - 4) + channel;
-						sum += pix[index] * mat[1][0];
-		
-						// Center
-						index += 4; // next pixel
-						sum += pix[index] * mat[1][1];
-		
-						// E
-						index += 4; // next pixel
-						sum += pix[index] * mat[1][2];
-		
-						// SW
-						index = (down - 4) + channel;
-						sum += pix[index] * mat[2][0];
-		
-						// S
-						index += 4; // next pixel
-						sum += pix[index] * mat[2][1];
-		
-						// SE
-						index += 4; // next pixel
-						sum += pix[index] * mat[2][2];
-		
-						// now we have the sum, apply the divisor and clamp:
-						sum /= 9;
-						sum = Math.min(Math.max(sum, 0), 255);
-		
-						// and store in the dest pixels
-						dest[center+channel] = sum;
+				centerRow = Math.floor(mat.length/2),
+				centerCol = Math.floor(mat[0].length/2),
+				matTotal = mat.length*mat[0].length,
+				current = 0,
+				channel = 0,
+				row, col, matRow, matCol, sum, offset;
+				
+			// Loop through each pixel
+			for(row = 0; row < src.height; row++){
+				for(col = 0; col < src.width*4; col++){
+					sum = 0;
+					
+					/*
+					 * Now loop through the effect matrix. This gives
+					 * more freedom when developing filters, since it allows
+					 * convolutions with matrixes of any size.
+					 */
+					for(matRow = 0; matRow < mat.length; matRow++){
+						for(matCol = 0; matCol < mat[0].length; matCol++){
+							// Skip 0 values
+							if(mat[matRow][matCol] == 0) continue;
+							
+							offset = 0;
+							// Now get the index of the corresponding pixel
+							// Vertical index
+							if(matRow < centerRow){
+								offset -= (centerRow - matRow)*src.width*4; // Might be 4
+							}else if(matRow > centerRow){
+								offset += (matRow - centerRow)*src.width*4; // Might be 4
+							}
+							// Horizontal index
+							offset += (centerCol - matCol)*4;
+							
+							// Add to sum if boundaries are ok
+							if(offset < 0 || offset > src.data.length) sum += 0;
+							else sum += mat[matRow][matCol] * src.data[current + offset];
+							
+							/*console.log("	Row: "+matRow+", Col: "+matCol);
+							console.log("	Mat Value: "+mat[matRow][matCol]);
+							console.log("	Offset: "+offset);
+							console.log("	Sum: "+sum);//*/
+						}
 					}
-		
-					// set alpha on this pixel to fully opaque:
-					dest[center+3] = 0xff;
-		
-					// next pixel:
-					center += 4;
-					up += 4;
-					down += 4;
-		
-				} // for cols
-			} // for rows
-			imgd.data = dest;
-			destCtx.putImageData(imgd, 0, 0);
+					
+					// Fix and check sum
+					sum /= matTotal;
+					sum = Math.min(Math.max(sum, 0), 255);
+					
+					// Store sum
+					dest.data[current] = sum;
+					
+					current++;
+					channel++;
+					if(channel > 3){
+						dest.data[current] = 255; // Alpha max
+						channel = 0;
+					}
+				}
+			}
+			console.log("Done");
+			// Store in destination canvas
+			destCtx.putImageData(dest, 0, 0);
+			
 			// Now save and display
 			//$('article').append('<img src="'+save()+'">');
 		}
