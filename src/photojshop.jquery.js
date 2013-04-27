@@ -173,6 +173,13 @@
 			// Loop through each pixel
 			for(row = 0; row < src.height; row++){
 				for(col = 0; col < src.width*4; col++){
+					// Skip alpha channel
+					if(channel == 3){
+						dest.data[current] = 255; // Alpha max
+						current++;
+						channel = 0;
+						continue;
+					}
 					sum = 0;
 					
 					/*
@@ -207,7 +214,7 @@
 						}
 					}
 					
-					// Fix and check sum
+					// Fix and check boundaries of sum
 					sum /= matTotal;
 					sum = Math.min(Math.max(sum, 0), 255);
 					
@@ -216,10 +223,6 @@
 					
 					current++;
 					channel++;
-					if(channel > 3){
-						dest.data[current] = 255; // Alpha max
-						channel = 0;
-					}
 				}
 			}
 			console.log("Done");
