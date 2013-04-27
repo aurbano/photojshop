@@ -30,12 +30,12 @@
 			effects = {
 				"blur": 	[[1, 1, 1],		[1, 1, 1],		[1, 1, 1]],
 				"blur2": 	[[1, 1, 1, 1],	[1, 1, 1, 1],	[1, 1, 1, 1],	[1, 1, 1, 1]],
-				"sharpen": 	[[0, -1, 0],	[-1, 9, -1],	[ 0, -1, 0]],
-				"emboss": 	[[ -18, -9, 0 ],	[ -9,  9,  9 ],	[ 0,  9, 18 ]],
+				"sharpen": 	[[0, -1, 0],	[-1, 13, -1],	[ 0, -1, 0]],
+				"emboss": 	[[ -10, -7, 0 ],	[ 10,  8,  -10 ],	[ 0,  7, 10 ]],
 				"lighten": 	[[1.1]],
 				"darken": 	[[0.9]],
 				"edge-enhance": 	[[ 0, 0, 0 ],	[-20, 20, 0 ],	[ 0, 0, 0 ]],
-				"edge-detect": 	[[ 0, 9, 0 ],	[9, -18, 9 ],	[ 0, 9, 0 ]]
+				"edge-detect": 	[[ 0, 9, 0 ],	[9, -40, 9 ],	[ 0, 9, 0 ]]
 			};
 			
 		destCanvas.width = this.width(),
@@ -128,16 +128,18 @@
 							offset += (centerCol - matCol)*4;
 							
 							// Add to sum if boundaries are ok
-							if(offset < 0 || offset > src.data.length){
-								divider--;
+							if(current + offset < 0 || offset > src.data.length){
+								divider--; // If the pixel is not used, dont divide by it.
 							}else{
 								sum += mat[matRow][matCol] * src.data[current + offset];
 							}
 							
-							/*console.log("	Row: "+matRow+", Col: "+matCol);
-							console.log("	Mat Value: "+mat[matRow][matCol]);
-							console.log("	Offset: "+offset);
-							console.log("	Sum: "+sum);//*/
+							/*if(sum > 0){
+								console.log("	Row: "+matRow+", Col: "+matCol);
+								console.log("	Mat Value: "+mat[matRow][matCol]);
+								console.log("	Offset: "+offset);
+								console.log("	Sum: "+sum);
+							}//*/
 						}
 					}
 					
@@ -147,6 +149,8 @@
 					
 					// Store sum
 					dest.data[current] = sum;
+					
+					//if(current > 10 && sum > 0) return;
 					
 					current++;
 					channel++;
