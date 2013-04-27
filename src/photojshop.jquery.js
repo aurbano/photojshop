@@ -13,17 +13,15 @@
 (function($, window, document, undefined) {
 	$.fn.PhotoJShop = function(options){
 		var settings = $.extend( {
-			'resolution'	: 5,	// Side of squares for resolution in px
-			'minRadius'		: 5,	// Minimum radius for effects with circles
-			'randRadius'	: 5,	// Max random radius extra
-			'randPosition'	: 2,	// Max point position deviation
-			'effect'		: null	// Effect to perform
+			'effect'		: null,	// Effect to perform
+			'replace'		: true	// Replace original
 		}, options);
 		if(typeof options == "string"){
 			settings.effect = options;
 		}
 		// Internal variables
-		var srcCanvas = this,
+		var obj = this,
+			srcCanvas = this,
 			destCanvas = document.createElement('canvas'),
 			srcCtx = null,
 			destCtx = destCanvas.getContext('2d'),
@@ -31,11 +29,13 @@
 			destImgd = null,
 			effects = {
 				"blur": 	[[1, 1, 1],		[1, 1, 1],		[1, 1, 1]],
-				"sharpen": 	[[0, -3, 0],	[-3, 21, -3],	[ 0, -3, 0]],
-				"emboss": 	[[ -18.0, -9.00, 0.000 ],	[ -9.00,  9.00,  9.00 ],	[ 0.000,  9.00, 18.00 ]],
-				"lighten": 	[[ 0.000, 0.000, 0.000 ],	[ 0.000, 12.00, 0.000 ],	[ 0.000, 0.000, 0.000 ]],
-				"darken": 	[[ 0.000, 0.000, 0.000 ],	[ 0.000, 6.000, 0.000 ],	[ 0.000, 0.000, 0.000 ]],
-				"edge": 	[[ 0.000, 9.000, 0.000 ],	[ 9.000, -36.0, 9.000 ],	[ 0.000, 9.000, 0.000 ]]
+				"blur2": 	[[1, 1, 1, 1],	[1, 1, 1, 1],	[1, 1, 1, 1],	[1, 1, 1, 1]],
+				"sharpen": 	[[0, -1, 0],	[-1, 9, -1],	[ 0, -1, 0]],
+				"emboss": 	[[ -18, -9, 0 ],	[ -9,  9,  9 ],	[ 0,  9, 18 ]],
+				"lighten": 	[[1.1]],
+				"darken": 	[[0.9]],
+				"edge-enhance": 	[[ 0, 0, 0 ],	[-20, 20, 0 ],	[ 0, 0, 0 ]],
+				"edge-detect": 	[[ 0, 9, 0 ],	[9, -18, 9 ],	[ 0, 9, 0 ]]
 			};
 			
 		destCanvas.width = this.width(),
@@ -55,18 +55,10 @@
 			// Resize canvas to fit img
 			srcCanvas.width = this.width();
 			srcCanvas.height = this.height();
-			// Draw both (Only for development)
-			//$('article').append(srcCanvas);
-			$('article').append(destCanvas);
-			// Create new context
-			srcCtx.drawImage(this.get(0), 0, 0);	// Draw image into canvas
+			// Draw image into canvas
+			srcCtx.drawImage(this.get(0), 0, 0);
 			srcImgd = srcCtx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
-			/*if(!generated){
-				generateAvg(function(){
-					applyEffect();
-				});
-				return;
-			}*/
+			// Apply desired filter
 			applyEffect();
 			return;
 		}else if(!this.is('canvas')){
@@ -80,51 +72,6 @@
 		
 		applyEffect();
 		
-		/**
-		 * Instead of using every pixel, it "reduces" the resolution by sampling
-		 * blocks of this.strokeResolution x this.strokeResolution, whose color is
-		 * the average color of the area inside.
-		 * This makes most of the editing work faster, and depending on the ratio
-		 * image size / resolution it is almost undetectable.
-		 */
-		function generateAvg(callback){
-			console.log("Generating average");
-			avg = []; // clear current avg
-			
-			// Get samples from the image with the resolution set in strokeResolution
-			var pix = srcImgd, auxAvg, points;
-			//
-			for(var y = 0; y < pix.height; y += settings.resolution){
-				for(var x = 0; x < pix.width; x += settings.resolution){
-					auxAvg = [0, 0, 0];	// Avg
-					points = 0;	// Pixels measured for avg (resolution^2)
-					for(var x1 = 0; x1 < settings.resolution; x1++){
-						if(x+x1 > pix.width) break;
-						for(var y1 = 0; y1 < settings.resolution; y1++){
-							if(y+y1 > pix.height) break;
-							// I now have all needed pointers
-							// Get the index inside pix array
-							var pixIndex = ((y+y1)*pix.width+x+x1)*4;
-							auxAvg[0] += pix.data[pixIndex];
-							auxAvg[1] += pix.data[pixIndex+1];
-							auxAvg[2] += pix.data[pixIndex+2];
-							points++;
-							//console.log(pix.data[pixIndex]);
-							//debugger;
-						}
-					}
-					// Now get final average
-					auxAvg[0] = Math.round(auxAvg[0]/points);
-					auxAvg[1] = Math.round(auxAvg[1]/points);
-					auxAvg[2] = Math.round(auxAvg[2]/points);
-					// Store
-					avg.push(auxAvg);
-				}
-			}
-			// Set flag
-			this.generated = true;
-			if(callback!==undefined)callback.call();
-		}
 		/**
 		 * Applies a given effect to the canvas
 		 */
@@ -145,7 +92,7 @@
 				current = 0,
 				channel = 0,
 				row, col, matRow, matCol, sum, offset, divider;
-				
+			
 			// Loop through each pixel
 			for(row = 0; row < src.height; row++){
 				for(col = 0; col < src.width*4; col++){
@@ -173,16 +120,15 @@
 							// Now get the index of the corresponding pixel
 							// Vertical index
 							if(matRow < centerRow){
-								offset -= (centerRow - matRow)*src.width*4; // Might be 4
+								offset -= (centerRow - matRow)*src.width*4;
 							}else if(matRow > centerRow){
-								offset += (matRow - centerRow)*src.width*4; // Might be 4
+								offset += (matRow - centerRow)*src.width*4;
 							}
 							// Horizontal index
 							offset += (centerCol - matCol)*4;
 							
 							// Add to sum if boundaries are ok
 							if(offset < 0 || offset > src.data.length){
-								sum += 0;
 								divider--;
 							}else{
 								sum += mat[matRow][matCol] * src.data[current + offset];
@@ -210,8 +156,14 @@
 			// Store in destination canvas
 			destCtx.putImageData(dest, 0, 0);
 			
-			// Now save and display
-			//$('article').append('<img src="'+save()+'">');
+			if(settings.replace){
+				if(obj.is('img')) $('img').attr('src',save());
+				else srcCtx.putImageData(dest, 0, 0);
+				return obj;
+			}else{
+				// Return image data
+				return save();
+			}
 		}
 		/**
 		 * Generates a data URL for the canvas
