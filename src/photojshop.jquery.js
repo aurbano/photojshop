@@ -30,8 +30,8 @@
 			srcImgd = null,
 			destImgd = null,
 			effects = {
-				"blur": 	[[ 1.000, 1.000, 1.000 ],	[ 1.000, 1.000, 1.000 ],	[ 1.000, 1.000, 1.000 ]],
-				"sharpen": 	[[ 0.000, -3.00, 0.000 ],	[ -3.00, 21.00, -3.00 ],	[ 0.000, -3.00, 0.000 ]],
+				"blur": 	[[1, 1, 1],		[1, 1, 1],		[1, 1, 1]],
+				"sharpen": 	[[0, -3, 0],	[-3, 21, -3],	[ 0, -3, 0]],
 				"emboss": 	[[ -18.0, -9.00, 0.000 ],	[ -9.00,  9.00,  9.00 ],	[ 0.000,  9.00, 18.00 ]],
 				"lighten": 	[[ 0.000, 0.000, 0.000 ],	[ 0.000, 12.00, 0.000 ],	[ 0.000, 0.000, 0.000 ]],
 				"darken": 	[[ 0.000, 0.000, 0.000 ],	[ 0.000, 6.000, 0.000 ],	[ 0.000, 0.000, 0.000 ]],
@@ -144,19 +144,20 @@
 				matTotal = mat.length*mat[0].length,
 				current = 0,
 				channel = 0,
-				row, col, matRow, matCol, sum, offset;
+				row, col, matRow, matCol, sum, offset, divider;
 				
 			// Loop through each pixel
 			for(row = 0; row < src.height; row++){
 				for(col = 0; col < src.width*4; col++){
 					// Skip alpha channel
 					if(channel == 3){
-						dest.data[current] = 255; // Alpha max
+						dest.data[current] = src.data[current]; // Alpha max
 						current++;
 						channel = 0;
 						continue;
 					}
 					sum = 0;
+					divider = matTotal;
 					
 					/*
 					 * Now loop through the effect matrix. This gives
@@ -180,8 +181,12 @@
 							offset += (centerCol - matCol)*4;
 							
 							// Add to sum if boundaries are ok
-							if(offset < 0 || offset > src.data.length) sum += 0;
-							else sum += mat[matRow][matCol] * src.data[current + offset];
+							if(offset < 0 || offset > src.data.length){
+								sum += 0;
+								divider--;
+							}else{
+								sum += mat[matRow][matCol] * src.data[current + offset];
+							}
 							
 							/*console.log("	Row: "+matRow+", Col: "+matCol);
 							console.log("	Mat Value: "+mat[matRow][matCol]);
@@ -191,7 +196,7 @@
 					}
 					
 					// Fix and check boundaries of sum
-					sum /= matTotal;
+					sum /= divider;
 					sum = Math.min(Math.max(sum, 0), 255);
 					
 					// Store sum
