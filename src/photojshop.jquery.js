@@ -14,7 +14,8 @@
 	$.fn.PhotoJShop = function(options){
 		var settings = $.extend( {
 			'effect'		: null,	// Effect to perform
-			'replace'		: true	// Replace original
+			'replace'		: true,	// Replace original
+			'matrix'		: null	// Custom effect matrix
 		}, options);
 		if(typeof options == "string"){
 			settings.effect = options;
@@ -77,15 +78,17 @@
 		 */
 		function applyEffect(callback){
 			console.log("Applying effect: "+settings.effect);
-			if(settings.effect == null){
-				console.error("PhotoJShop error: You must select an effect");
-				return false;
+			// Effect matrix
+			var mat = settings.matrix;
+			console.log(mat);
+			if(mat == null) mat = settings.effect;
+			if(mat == null){
+				console.error('PhotoJShop error: Please specify an effect or custom matrix');
 			}
 			// Local variables
 			var src = srcImgd,
 				dest = destImgd,
 				total = src.data.length,
-				mat = effects[settings.effect],
 				centerRow = Math.floor(mat.length/2),
 				centerCol = Math.floor(mat[0].length/2),
 				matTotal = mat.length*mat[0].length,

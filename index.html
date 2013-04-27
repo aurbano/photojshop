@@ -52,6 +52,14 @@ footer{
 <script src="src/photojshop.jquery.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+	$('#custom').click(function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		var mat = eval(prompt("Please enter custom matrix, in JavaScript format (e.g. [[0,0,0],[0,1,0],[0,0,0]])"));
+		$('#jack').PhotoJShop({
+			'matrix' : mat
+		});
+	});
 	$('nav a').click(function(e){
 		e.preventDefault();
 		$('#jack').PhotoJShop({
@@ -78,6 +86,7 @@ $(document).ready(function(){
 		<li><a href="#emboss" data-effect="emboss">Emboss</a></li>
 		<li><a href="#edge" data-effect="edge-enhance">Edge enhance</a></li>
 		<li><a href="#edge" data-effect="edge-detect">Edge detect</a></li>
+		<li><a href="#custom" id="custom" data-effect="custom">Custom</a></li>
 	</ul>
 </nav>
 <article>
