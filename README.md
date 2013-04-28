@@ -41,15 +41,23 @@ $('#image1').attr('src',
   })
 );
 ```
+Do you want to do a non-implemented effect? Use the `custom` mode, and define your own matrix, in the example below we will use a version of `blur` that also lightens the image:
+```javascript
+$('img').PhotoJShop({
+  matrix :  [ [1, 1,  1],
+              [1, 1.5,1],
+              [1, 1,  1] ]
+});
+```
 ##Parameters
 Right now the only real parameter is **effect**, all the others are not really used and come from the old implementation in Nuophoto. I'm still in the process of porting it.
 The available effects are
 
 | Parameter | Values | Description|
 |--------|-------------|----------|
-|**effect**|`blur`, `sharpen`, `emboss`, `lighten`, `darken`, `edge-enhance`, `edge-detect` | Select the effect you want to apply|
+|**effect**|`blur`, `sharpen`, `emboss`, `lighten`, `darken`, `edge-enhance`, `edge-detect`, `custom` | Select the effect you want to apply|
 |**replace**|`true`, `false`| If `true` the result of the filter will replace the original image/canvas data and return the jQuery object for chainability. If `false` it will return the dataURL of the resulting image|
-
+|**matrix**|JavaScript matrix| Use this with the `custom` effect (Although if you set the matrix you don't have to specify the `effect`), the matrix can be any size, but it must be in JavaScript format.|
 ##Meta
 
 - Developed by [Alejandro U. Álvarez](http://urbanoalvarez.es)
