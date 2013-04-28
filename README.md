@@ -22,7 +22,16 @@ After including jQuery, include *photojshop.jquery.js*. Once loaded you simply n
 Right now it works on Canvas and images, so you would call it like so:
 
 ```javascript
-$('img').PhotoJShop("blur");
+$('#img1').PhotoJShop("blur");
+
+// The following would produce the same effect:
+$('#img1').PhotoJShop({ effect : "blur"});
+
+// Color effects can be applied at the same time:
+$('#img1').PhotoJShop({
+  effect  : "blur",
+  color   : "b&w"
+});
 ```
 
 Effects can also be chained if `replace` is set to `true`:
@@ -58,6 +67,8 @@ The available effects are
 |**effect**|`blur`, `sharpen`, `emboss`, `lighten`, `darken`, `edge-enhance`, `edge-detect`, `custom` | Select the effect you want to apply|
 |**replace**|`true`, `false`| If `true` the result of the filter will replace the original image/canvas data and return the jQuery object for chainability. If `false` it will return the dataURL of the resulting image|
 |**matrix**|JavaScript matrix| Use this with the `custom` effect (Although if you set the matrix you don't have to specify the `effect`), the matrix can be any size, but it must be in JavaScript format.|
+|**color**|`b&w`, `sepia`, `vintage`, `recolor`, `red`, `blue`, `green`| Apply a coloring effect. Red, blue and green leave only the corresponding channel on all channels.|
+
 ##Meta
 
 - Developed by [Alejandro U. Álvarez](http://urbanoalvarez.es)
