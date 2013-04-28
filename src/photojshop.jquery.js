@@ -35,7 +35,7 @@
 				"emboss": 	[[ -10, -7, 0 ],	[ 10,  8,  -10 ],	[ 0,  7, 10 ]],
 				"lighten": 	[[1.1]],
 				"darken": 	[[0.9]],
-				"edge-enhance": 	[[ 0, 0, 0 ],	[-20, 20, 0 ],	[ 0, 0, 0 ]],
+				"edge-enhance": [[ 0, 0, 0 ],	[-20, 20, 0 ],	[ 0, 0, 0 ]],
 				"edge-detect": 	[[ 0, 9, 0 ],	[9, -40, 9 ],	[ 0, 9, 0 ]]
 			};
 			
@@ -77,14 +77,15 @@
 		 * Applies a given effect to the canvas
 		 */
 		function applyEffect(callback){
-			console.log("Applying effect: "+settings.effect);
 			// Effect matrix
 			var mat = settings.matrix;
-			console.log(mat);
-			if(mat == null) mat = settings.effect;
+			if(mat == null) mat = effects[settings.effect];
 			if(mat == null){
 				console.error('PhotoJShop error: Please specify an effect or custom matrix');
+				return obj;
 			}
+			console.log("Using matrix:");
+			console.log(mat);
 			// Local variables
 			var src = srcImgd,
 				dest = destImgd,
@@ -159,7 +160,6 @@
 					channel++;
 				}
 			}
-			console.log("Done");
 			// Store in destination canvas
 			destCtx.putImageData(dest, 0, 0);
 			
