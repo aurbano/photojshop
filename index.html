@@ -15,6 +15,9 @@ canvas{
 h1{
 	color:#003871;
 }
+h3{
+	display:inline-block;
+}
 a{
 	text-decoration:none;
 	color:#005BCC;
@@ -51,10 +54,17 @@ footer{
 <script src="src/photojshop.jquery.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('nav a').click(function(e){
+	$('#effects a').click(function(e){
 		e.preventDefault();
 		$('#jack').PhotoJShop({
 			'effect' : $(this).attr("data-effect")
+		});
+		return true;
+	});
+	$('#filters a').click(function(e){
+		e.preventDefault();
+		$('#jack').PhotoJShop({
+			'color' : $(this).attr("data-effect")
 		});
 		return true;
 	});
@@ -76,8 +86,9 @@ $(document).ready(function(){
 <div style="width:500px; margin:0 auto;">
 <p>Welcome to the PhotoJShop demo page. Below you will find a set of links that will apply the corresponding effect to the image.</p>
 <p>For more information and bug reporting please go to the <a href="https://github.com/aurbano/PhotoJShop">Github repository</a>.</p></div>
+<h3>Effects: </h3>
 <nav>
-	<ul>
+	<ul id="effects">
 		<li><a href="#blur" data-effect="blur">Blur</a></li>
 		<li><a href="#blur" data-effect="blur2">Blur (rad=4)</a></li>
 		<li><a href="#sharpen" data-effect="sharpen">Sharpen</a></li>
@@ -86,6 +97,14 @@ $(document).ready(function(){
 		<li><a href="#emboss" data-effect="emboss">Emboss</a></li>
 		<li><a href="#edge" data-effect="edge-enhance">Edge enhance</a></li>
 		<li><a href="#edge" data-effect="edge-detect">Edge detect</a></li>
+	</ul>
+</nav>
+<br />
+<h3>Filters: </h3>
+<nav>
+	<ul id="filters">
+		<li><a href="#filter" data-effect="b&w">B&W</a></li>
+		<li><a href="#filter" data-effect="sepia">Sepia</a></li>
 	</ul>
 </nav>
 <p>You can also use a <a href="#custom" id="custom" data-effect="custom">Custom matrix</a></p>

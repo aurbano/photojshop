@@ -13,7 +13,8 @@
 (function($, window, document, undefined) {
 	$.fn.PhotoJShop = function(options){
 		var settings = $.extend( {
-			'effect'		: null,	// Effect to perform
+			'effect'		: null,	// Filter to perform
+			'color'			: null, // Color effect
 			'replace'		: true,	// Replace original
 			'matrix'		: null	// Custom effect matrix
 		}, options);
@@ -37,6 +38,10 @@
 				"darken": 	[[0.9]],
 				"edge-enhance": [[ 0, 0, 0 ],	[-20, 20, 0 ],	[ 0, 0, 0 ]],
 				"edge-detect": 	[[ 0, 9, 0 ],	[9, -40, 9 ],	[ 0, 9, 0 ]]
+			},
+			colorEffects = {
+				"b&w" : [[1, 1, 1],[1, 1, 1],[1, 1, 1]],
+				"sepia" : [[2, 1, -3],[0, 1, 0],[1, 0, -2]]
 			};
 			
 		destCanvas.width = this.width(),
@@ -77,25 +82,31 @@
 		 * Applies a given effect to the canvas
 		 */
 		function applyEffect(callback){
-			// Effect matrix
-			var mat = settings.matrix;
-			if(mat == null) mat = effects[settings.effect];
-			if(mat == null){
-				console.error('PhotoJShop error: Please specify an effect or custom matrix');
-				return obj;
-			}
-			console.log("Using matrix:");
-			console.log(mat);
+			
 			// Local variables
 			var src = srcImgd,
 				dest = destImgd,
 				total = src.data.length,
-				centerRow = Math.floor(mat.length/2),
-				centerCol = Math.floor(mat[0].length/2),
-				matTotal = mat.length*mat[0].length,
+				mat = settings.matrix,
+				colorMat = null,
 				current = 0,
 				channel = 0,
-				row, col, matRow, matCol, sum, offset, divider;
+				row, col, sum;
+				
+			// Effect matrix
+			if(mat == null && settings.effect !== null) mat = effects[settings.effect];
+			if(mat == null && settings.color == null){
+				console.error('PhotoJShop error: Please specify an effect or custom matrix');
+				return obj;
+			}else if(mat !== null){
+				var centerRow = Math.floor(mat.length/2),
+					centerCol = Math.floor(mat[0].length/2),
+					matTotal = mat.length*mat[0].length,
+					matRow, matCol, offset, divider;
+			}
+			// Color effect matrix
+			if(settings.color !== null) colorMat = colorEffects[settings.color];
+			
 			
 			// Loop through each pixel
 			for(row = 0; row < src.height; row++){
@@ -111,48 +122,63 @@
 					divider = matTotal;
 					
 					/*
-					 * Now loop through the effect matrix. This gives
-					 * more freedom when developing filters, since it allows
-					 * convolutions with matrixes of any size.
+					 * Apply color effect, if selected. Only apply on first channel
 					 */
-					for(matRow = 0; matRow < mat.length; matRow++){
-						for(matCol = 0; matCol < mat[0].length; matCol++){
-							// Skip 0 values
-							if(mat[matRow][matCol] == 0) continue;
-							
-							offset = 0;
-							// Now get the index of the corresponding pixel
-							// Vertical index
-							if(matRow < centerRow){
-								offset -= (centerRow - matRow)*src.width*4;
-							}else if(matRow > centerRow){
-								offset += (matRow - centerRow)*src.width*4;
+					if(colorMat !== null){
+						sum = src.data[current - channel] * colorMat[channel][0];		// R
+						sum += src.data[current - channel + 1] * colorMat[channel][1];	// G
+						sum += src.data[current - channel + 2] * colorMat[channel][1];	// B
+						dest.data[current] = sum / 3;
+						sum = 0;
+					}
+					
+					if(mat !== null){
+						/*
+						 * Now loop through the effect matrix. This gives
+						 * more freedom when developing filters, since it allows
+						 * convolutions with matrixes of any size.
+						 */
+						for(matRow = 0; matRow < mat.length; matRow++){
+							for(matCol = 0; matCol < mat[0].length; matCol++){
+								// Skip 0 values
+								if(mat[matRow][matCol] == 0) continue;
+								
+								offset = 0;
+								// Now get the index of the corresponding pixel
+								// Vertical index
+								if(matRow < centerRow){
+									offset -= (centerRow - matRow)*src.width*4;
+								}else if(matRow > centerRow){
+									offset += (matRow - centerRow)*src.width*4;
+								}
+								// Horizontal index
+								offset += (centerCol - matCol)*4;
+								
+								// Add to sum if boundaries are ok
+								if(current + offset < 0 || offset > src.data.length){
+									divider--; // If the pixel is not used, dont divide by it.
+								}else{
+									sum += mat[matRow][matCol] * src.data[current + offset];
+								}
+								
+								/*if(sum > 0){
+									console.log("	Row: "+matRow+", Col: "+matCol);
+									console.log("	Mat Value: "+mat[matRow][matCol]);
+									console.log("	Offset: "+offset);
+									console.log("	Sum: "+sum);
+								}//*/
 							}
-							// Horizontal index
-							offset += (centerCol - matCol)*4;
-							
-							// Add to sum if boundaries are ok
-							if(current + offset < 0 || offset > src.data.length){
-								divider--; // If the pixel is not used, dont divide by it.
-							}else{
-								sum += mat[matRow][matCol] * src.data[current + offset];
-							}
-							
-							/*if(sum > 0){
-								console.log("	Row: "+matRow+", Col: "+matCol);
-								console.log("	Mat Value: "+mat[matRow][matCol]);
-								console.log("	Offset: "+offset);
-								console.log("	Sum: "+sum);
-							}//*/
 						}
 					}
 					
 					// Fix and check boundaries of sum
-					sum /= divider;
-					sum = Math.min(Math.max(sum, 0), 255);
-					
-					// Store sum
-					dest.data[current] = sum;
+					if(mat !== null){
+						sum /= divider;
+						sum = Math.min(Math.max(sum, 0), 255);
+						
+						// Store sum
+						if(mat !== null) dest.data[current] = sum;
+					}
 					
 					//if(current > 10 && sum > 0) return;
 					
