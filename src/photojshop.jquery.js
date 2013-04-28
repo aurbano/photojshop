@@ -42,9 +42,11 @@
 			colorEffects = {
 				"b&w" : [[1, 1, 1],[1, 1, 1],[1, 1, 1]],
 				"sepia" : [[1.2, 1.1, 1],[0.8, 0.7, 0.6],[0.3, 0.2, 0.1]],
-				"red" : [[3,0, 0],[0, 0, 0],[0, 0, 0]],
-				"blue" : [[0, 0, 0],[0, 0, 0],[0, 0, 3]],
-				"green" : [[0, 0, 0],[0, 3, 0],[0, 0, 0]]
+				"vintage" : [[1.9, 0.5, -0.6], [-0.2, 3, 0.1],[0.6, 0.4, 2]],
+				"recolor" : [[0.1,1.5,1.5],[1.5,0.1,1.5],[1.5,1.5,0.1]],
+				"red" : [[3,0, 0],[3, 0, 0],[3, 0, 0]],
+				"blue" : [[0, 0, 3],[0, 0, 3],[0, 0, 3]],
+				"green" : [[0, 3, 0],[0, 3, 0],[0, 3, 0]]
 			};
 			
 		destCanvas.width = this.width(),
@@ -131,7 +133,8 @@
 						sum = src.data[current - channel] * colorMat[channel][0];		// R
 						sum += src.data[current - channel + 1] * colorMat[channel][1];	// G
 						sum += src.data[current - channel + 2] * colorMat[channel][2];	// B
-						dest.data[current] = sum / 3;
+						sum = Math.min(Math.max(sum/3, 0), 255);
+						dest.data[current] = sum;
 						sum = 0;
 					}
 					
