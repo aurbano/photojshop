@@ -34,7 +34,7 @@ $('#img1').PhotoJShop({
 });
 ```
 
-Effects can also be chained if `replace` is set to `true`:
+Effects can also be chained if `replace` is set to `true` (Which is by default)
 
 ```javascript
 $('img').PhotoJShop("blur").PhotoJShop("lighten");
@@ -58,9 +58,9 @@ $('img').PhotoJShop({
               [1, 1,  1] ]
 });
 ```
+You can use any size for the matrix, although it must be square. You can use a 1x1 matrix for example, which will lighten/darken the image if you use a bigger/lower value than 1.
+
 ##Parameters
-Right now the only real parameter is **effect**, all the others are not really used and come from the old implementation in Nuophoto. I'm still in the process of porting it.
-The available effects are
 
 | Parameter | Values | Description|
 |--------|-------------|----------|
