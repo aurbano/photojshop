@@ -57,6 +57,10 @@ $('img').PhotoJShop({
               [1, 1.5,1],
               [1, 1,  1] ]
 });
+// That code is exactly the same as the following:
+$('img').PhotoJShop({
+  matrix :  [ [1.5] ]
+});
 ```
 You can use any size for the matrix, although it must be square. You can use a 1x1 matrix for example, which will lighten/darken the image if you use a bigger/lower value than 1.
 
