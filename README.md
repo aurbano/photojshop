@@ -1,7 +1,7 @@
 PhotoJShop
 ==========
 
-> A JavaScript photo editing library packaged in a simple jQuery plugin
+> A JavaScript photo editing library packaged in a simple [jQuery plugin](http://plugins.jquery.com/photojshop/)
 
 PhotoJShop is a JavaScript library for **photo editing** using the canvas, aiming to reproduce most usual filters.
 A demo of its capabilities can be seen in [Nuophoto](https://github.com/aurbano/nuophoto), a project that uses this library for all the editing *(Not really yet, it's still using the old version)*
@@ -14,7 +14,8 @@ The project has Github's pages enabled, so you can see the demo page online:
 
 * [PhotoJShop demo](http://github.urbanoalvarez.es/PhotoJShop/) *(Development)*
 
-*Please note that it sometimes takes Github several hours to update the files shown in GH Pages*
+###Download
+Head over to the [releases list](https://github.com/aurbano/PhotoJShop/releases) and grab the lastest one
 
 ##Usage
 After including jQuery, include *photojshop.jquery.js*. Once loaded you simply need to call it on a valid element. You have to ensure that the element has loaded, `$(document).ready()` doesn't mean images is loaded!
