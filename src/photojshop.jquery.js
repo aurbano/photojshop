@@ -10,7 +10,7 @@
  * Licensed under the MIT License
  *
  * @author Alejandro U. Alvarez <alejandro@urbanoalvarez.es>
- * @version 1.0.0
+ * @version 1.0.1
  */
 (function($, window, document, undefined) {
 	$.fn.PhotoJShop = function(options){
