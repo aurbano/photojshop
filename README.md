@@ -73,6 +73,10 @@ You can use any size for the matrix, although it must be square. You can use a 1
 |**matrix**|JavaScript matrix| Use this with the `custom` effect (Although if you set the matrix you don't have to specify the `effect`), the matrix can be any size, but it must be in JavaScript format.|
 |**color**|`b&w`, `sepia`, `vintage`, `recolor`, `red`, `blue`, `green`| Apply a coloring effect. Red, blue and green leave only the corresponding channel on all channels.|
 
+##Changelog
+History of changes:
+* 1.0.0 - First stable release
+
 ##Meta
 
 - Developed by [Alejandro U. Álvarez](http://urbanoalvarez.es)
