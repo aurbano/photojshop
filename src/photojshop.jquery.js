@@ -6,9 +6,11 @@
  *
  * Requirements:
  *	- jQuery
+ * 
+ * Licensed under the MIT License
  *
  * @author Alejandro U. Alvarez <alejandro@urbanoalvarez.es>
- * @version 1
+ * @version 1.0.0
  */
 (function($, window, document, undefined) {
 	$.fn.PhotoJShop = function(options){
@@ -51,6 +53,7 @@
 			
 		destCanvas.width = this.width(),
 		destCanvas.height = this.height();
+		
 		// Fill with empty pixels
 		destCtx.beginPath();
 		destCtx.rect(0, 0, destCanvas.width, destCanvas.height);
@@ -166,13 +169,6 @@
 								}else{
 									sum += mat[matRow][matCol] * src.data[current + offset];
 								}
-								
-								/*if(sum > 0){
-									console.log("	Row: "+matRow+", Col: "+matCol);
-									console.log("	Mat Value: "+mat[matRow][matCol]);
-									console.log("	Offset: "+offset);
-									console.log("	Sum: "+sum);
-								}//*/
 							}
 						}
 					}

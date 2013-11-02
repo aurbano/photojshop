@@ -1,0 +1,36 @@
+{
+    "name": "photojshop",
+    "title": "PhotoJShop",
+    "description": "A JavaScript library for photo editing using the canvas, aiming to reproduce most usual filters.",
+    "keywords": [
+        "image",
+        "effects",
+        "manipulation",
+        "color"
+    ],
+    "version": "1.0.1",
+    "author": {
+        "name": "Alejandro U. Alvarez",
+        "url": "https://urbanoalvarez.es"
+    },
+    "maintainers": [
+        {
+            "name": "Alejandro U. Alvarez",
+            "email": "alejandro@urbanoalvarez.es",
+            "url": "http://urbanoalvarez.es"
+        }
+    ],
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "http://opensource.org/licenses/MIT"
+        }
+    ],
+    "bugs": "https://github.com/aurbano/PhotoJShop/issues",
+    "homepage": "https://github.com/aurbano/PhotoJShop",
+    "docs": "https://github.com/aurbano/PhotoJShop",
+    "download": "https://github.com/aurbano/PhotoJShop/releases",
+    "dependencies": {
+        "jquery": ">=1.5"
+    }
+}
