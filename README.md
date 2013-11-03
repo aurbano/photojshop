@@ -18,7 +18,7 @@ The project has Github's pages enabled, so you can see the demo page online:
 Head over to the [releases list](https://github.com/aurbano/PhotoJShop/releases) and grab the lastest one
 
 ##Usage
-After including jQuery, include *photojshop.jquery.js*. Once loaded you simply need to call it on a valid element. You have to ensure that the element has loaded, `$(document).ready()` doesn't mean images is loaded!
+After including jQuery, include *photojshop.jquery.js*. Once loaded you simply need to call it on a valid element. You have to ensure that the element has loaded, `$(document).ready()` **doesn't mean images have loaded**!
 
 Right now it works on Canvas and images, so you would call it like so:
 
