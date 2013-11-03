@@ -76,7 +76,14 @@ You can use any size for the matrix, although it must be square. You can use a 1
 
 ##Changelog
 History of changes:
-* 1.0.0 - First stable release
+
+####1.0.1
+* Add minified version
+* Released in jQuery plugin repository
+
+####1.0.0
+* First stable release
+
 
 ##Meta
 
