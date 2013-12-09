@@ -39,7 +39,9 @@
 				"lighten": 	[[1.1]],
 				"darken": 	[[0.9]],
 				"edge-enhance": [[ 0, 0, 0 ],	[-20, 20, 0 ],	[ 0, 0, 0 ]],
-				"edge-detect": 	[[ 0, 9, 0 ],	[9, -40, 9 ],	[ 0, 9, 0 ]]
+				"edge-detect": 	[[ 0, 9, 0 ],	[9, -40, 9 ],	[ 0, 9, 0 ]],
+				'hard-edge' : [[2, 22, 1],[22, 1, -22],[ 1, -22, -2]],
+				'laplace' : [[-2,-2,-2],[-2,15,-2],[-2,-2,-2]]
 			},
 			colorEffects = {
 				"b&w" : [[1, 1, 1],[1, 1, 1],[1, 1, 1]],
@@ -76,7 +78,7 @@
 			applyEffect();
 			return;
 		}else if(!this.is('canvas')){
-			alert('Unsupported element')
+			alert('Unsupported element');
 			return;
 		}
 		srcCtx = srcCanvas.getContext('2d');
