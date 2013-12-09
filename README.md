@@ -69,13 +69,14 @@ You can use any size for the matrix, although it must be square. You can use a 1
 
 | Parameter | Values | Description|
 |--------|-------------|----------|
-|**effect**|`blur`, `sharpen`, `emboss`, `lighten`, `darken`, `edge-enhance`, `edge-detect`, `custom` | Select the effect you want to apply|
+|**effect**|`blur`, `sharpen`, `emboss`, `lighten`, `darken`, `edge-enhance`, `edge-detect`, `hard-edge`, `laplace`, `custom` | Select the effect you want to apply|
 |**replace**|`true`, `false`| If `true` the result of the filter will replace the original image/canvas data and return the jQuery object for chainability. If `false` it will return the dataURL of the resulting image|
 |**matrix**|JavaScript matrix| Use this with the `custom` effect (Although if you set the matrix you don't have to specify the `effect`), the matrix can be any size, but it must be in JavaScript format.|
 |**color**|`b&w`, `sepia`, `vintage`, `recolor`, `red`, `blue`, `green`| Apply a coloring effect. Red, blue and green leave only the corresponding channel on all channels.|
 
 ##Changelog
-History of changes:
+####1.0.2
+* Add two new effects: Hard-edge and Laplace
 
 ####1.0.1
 * Add minified version
