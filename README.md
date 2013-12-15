@@ -75,7 +75,7 @@ You can use any size for the matrix, although it must be square. You can use a 1
 |**color**|`b&w`, `sepia`, `vintage`, `recolor`, `red`, `blue`, `green`| Apply a coloring effect. Red, blue and green leave only the corresponding channel on all channels.|
 
 ##Changelog
-####1.0.2
+####1.0.4
 * Add two new effects: Hard-edge and Laplace
 
 ####1.0.1
