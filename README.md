@@ -91,3 +91,5 @@ You can use any size for the matrix, although it must be square. You can use a 1
 - Developed by [Alejandro U. Álvarez](http://urbanoalvarez.es)
 - Licensed under the MIT license.
 - Contributors: -
+
+[![Analytics](https://ga-beacon.appspot.com/UA-3181088-16/photojshop/readme)](https://github.com/aurbano)
