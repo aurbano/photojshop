@@ -3,7 +3,7 @@ PhotoJShop
 
 > A JavaScript photo editing library packaged in a simple [jQuery plugin](http://plugins.jquery.com/photojshop/)
 
-PhotoJShop is a JavaScript library for **photo editing** using the canvas, aiming to reproduce most usual filters.
+PhotoJShop is a JavaScript library for **photo editing** using the canvas and kernel convolution matrixes, aiming to reproduce most usual filters.
 A demo of its capabilities can be seen in [Nuophoto](https://github.com/aurbano/nuophoto), a project that uses this library for all the editing *(Although an older version)*
 
 The idea is to provide a simple library to developers that will allow quick integration of photo filters to their website.
