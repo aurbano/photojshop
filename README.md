@@ -8,16 +8,16 @@ A demo of its capabilities can be seen in [Nuophoto](https://github.com/aurbano/
 
 The idea is to provide a simple library to developers that will allow quick integration of photo filters to their website.
 
-##Demo
+## Demo
 If you clone the repo, simply open `index.html`, which is a very simple demo of the plugin's capabilities.
 The project has Github's pages enabled, so you can see the demo page online:
 
 * [PhotoJShop demo](http://github.urbanoalvarez.es/PhotoJShop/) *(Development)*
 
-###Download
+### Download
 Head over to the [releases list](https://github.com/aurbano/PhotoJShop/releases) and grab the lastest one
 
-##Usage
+## Usage
 After including jQuery, include *photojshop.jquery.js*. Once loaded you simply need to call it on a valid element. You have to ensure that the element has loaded, `$(document).ready()` **doesn't mean images have loaded**!
 
 Right now it works on Canvas and images, so you would call it like so:
@@ -65,7 +65,7 @@ $('img').PhotoJShop({
 ```
 You can use any size for the matrix, although it must be square. You can use a 1x1 matrix for example, which will lighten/darken the image if you use a bigger/lower value than 1.
 
-##Parameters
+## Parameters
 
 | Parameter | Values | Description|
 |--------|-------------|----------|
@@ -74,19 +74,19 @@ You can use any size for the matrix, although it must be square. You can use a 1
 |**matrix**|JavaScript matrix| Use this with the `custom` effect (Although if you set the matrix you don't have to specify the `effect`), the matrix can be any size, but it must be in JavaScript format.|
 |**color**|`b&w`, `sepia`, `vintage`, `recolor`, `red`, `blue`, `green`| Apply a coloring effect. Red, blue and green leave only the corresponding channel on all channels.|
 
-##Changelog
-####1.0.4
+## Changelog
+#### 1.0.4
 * Add two new effects: Hard-edge and Laplace
 
-####1.0.1
+#### 1.0.1
 * Add minified version
 * Released in jQuery plugin repository
 
-####1.0.0
+#### 1.0.0
 * First stable release
 
 
-##Meta
+## Meta
 
 - Developed by [Alejandro U. Álvarez](http://urbanoalvarez.es)
 - Licensed under the MIT license.
