@@ -12,7 +12,7 @@ The idea is to provide a simple library to developers that will allow quick inte
 If you clone the repo, simply open `index.html`, which is a very simple demo of the plugin's capabilities.
 The project has Github's pages enabled, so you can see the demo page online:
 
-* [PhotoJShop demo](http://github.urbanoalvarez.es/PhotoJShop/) *(Development)*
+* [PhotoJShop demo](https://aurbano.github.io/PhotoJShop/) *(Development)*
 
 ### Download
 Head over to the [releases list](https://github.com/aurbano/PhotoJShop/releases) and grab the lastest one
